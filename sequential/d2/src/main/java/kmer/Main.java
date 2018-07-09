@@ -3,18 +3,12 @@ package kmer;
 public class Main {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 
-		D2 d2 = new D2(4);
-		
-		//Number cc = d2.convert(1278);
-		
-		//System.out.println("cc : " + cc);
-		
-		
-		
-		String c2 = d2.nextKmer(1);
-		System.out.println("c2 : " + c2);
+		D2 d2 = new D2(2);	
+		String Q="ATCGGCTGACCCGT";
+		String S="CTGAATGCATGGCA";
+		long score = d2.score(S, Q);
+		System.out.println("Score di Q e S = "+score);
 		
 	}
 
