@@ -4,16 +4,19 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		D2 d2 = new D2(15);	
+		D2 d2 = new D2(12);	
 		long starTime = System.currentTimeMillis();
-		String Q="ATCGGCTGACCCGTA";
-		//String S="ATCGGCTGACCCGTA";
-		String S="GCTGAATGCATGGCA";
+		String Q="ACAAGATGCCAT";
+		String S="GCTGAATGCATG";
 		long score = d2.score(S, Q);
 		long endTime = System.currentTimeMillis();
-		double totTime = (double)(endTime - starTime)/1000;
+		double totTime = (double)(endTime - starTime);
+		if(totTime<=60.0)
+			System.out.println("Tempo totale: "+totTime/1000+ " sec");
+		else
+			System.out.println("Tempo totale: "+totTime/60+ " sec");
 		System.out.println("Score di Q e S = "+score);
-		System.out.println("Tempo totale: "+totTime+ " sec");
+		
 		
 	}
 
