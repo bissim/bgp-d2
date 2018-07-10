@@ -14,7 +14,7 @@ public class Main {
 		if(totTime<=60.0)
 			System.out.println("Total time: "+totTime/1000+ " sec");
 		else
-			System.out.println("Total time: "+totTime/60+ " sec");
+			System.out.println("Total time: "+totTime/60+ " min");
 		System.out.println("Score di Q e S = "+score);
 		
 		
