@@ -12,9 +12,9 @@ public class Main {
 		long endTime = System.currentTimeMillis();
 		double totTime = (double)(endTime - starTime);
 		if(totTime<=60.0)
-			System.out.println("Tempo totale: "+totTime/1000+ " sec");
+			System.out.println("Total time: "+totTime/1000+ " sec");
 		else
-			System.out.println("Tempo totale: "+totTime/60+ " sec");
+			System.out.println("Total time: "+totTime/60+ " sec");
 		System.out.println("Score di Q e S = "+score);
 		
 		
