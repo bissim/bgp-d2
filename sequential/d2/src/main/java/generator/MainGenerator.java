@@ -7,7 +7,7 @@ public class MainGenerator {
 		
 		long starTime = System.currentTimeMillis();
 		try {
-			SequenceGenerator.datasetUnique("TestDataset1","",50000);
+			SequenceGenerator.datasetUnique("TestDataset1","",200000);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -16,6 +16,6 @@ public class MainGenerator {
 		if(totTime<=60000)
 			System.out.println("Total time: "+totTime/1000+ " sec");
 		else
-			System.out.println("Total time: "+totTime/1000+" ("+totTime/60000+" min"+")");
+			System.out.println("Total time: "+totTime/1000+"sec ("+totTime/60000+" min"+")");
 	}
 }
