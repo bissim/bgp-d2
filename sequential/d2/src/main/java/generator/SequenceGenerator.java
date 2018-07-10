@@ -57,7 +57,7 @@ public class SequenceGenerator {
 		PrintStream ps = new PrintStream( new File(out_dir + "dataset.fasta") );
 		
 		for( int i = 0; i < num_seq; i++ ){
-			ps.printf("> %s_SEQ_%d\n", namedataset, i);
+			ps.printf(">gnl|%s|%d %s_SEQ_%d\n", namedataset, i, namedataset, i);
 			int nextSeqLenght = MIN_LENGTH_SEQ + RNG.nextInt(MAX_LENGTH_SEQ - MIN_LENGTH_SEQ);
 			sequence(nextSeqLenght, ps);
 			ps.println("\n");
