@@ -20,54 +20,48 @@ public class SequenceGenerator {
 	 * @param length
 	 * @param out
 	 */
-	public static void sequenceGen(int length, PrintStream out){
+	public static void sequence(int length, PrintStream out){
 		
 		for( int i = 0; i < length; i++ ){
 			int nextChoice = RNG.nextInt(SIGMA.length);
-			char nextChar = SIGMA[nextChoice];
-			
+			char nextChar = SIGMA[nextChoice];		
 			out.print( nextChar );
-		}
-		
+		}	
 	}
 	
 	/**
 	 * Genera un dataset composto da num_seq file differenti
 	 * I file rappresentano sequenza avente lunghezza casuale comeprese tra [MIN_LENGHT_SEQ; MAX_LENGTH_SEQ]
-	 * TODO aggiungere la prima riga di intestazione!!!!
 	 * @param num_seq
 	 * @throws FileNotFoundException
 	 */
-	public static void datasetGen(String out_dir, int num_seq) throws FileNotFoundException{
+	public static void dataset(String namedataset, String out_dir, int num_seq) throws FileNotFoundException{
 		
-		for( int i = 0; i < num_seq; i++ ){
-			
-			int nextSeqLenght = MIN_LENGTH_SEQ + RNG.nextInt(MAX_LENGTH_SEQ - MIN_LENGTH_SEQ);
-			
+		for( int i = 0; i < num_seq; i++ ){		
 			PrintStream ps = new PrintStream( new File(out_dir + "seq_" + i + ".fasta") );
-			sequenceGen(nextSeqLenght, ps);
-			ps.close();
-			
+			ps.printf("> %s_SEQ_%d\n", namedataset, i);
+			int nextSeqLenght = MIN_LENGTH_SEQ + RNG.nextInt(MAX_LENGTH_SEQ - MIN_LENGTH_SEQ);				
+			sequence(nextSeqLenght, ps);
+			ps.close();		
 		}
 	}
 	
 	/**
-	 * Genera un dataset composto da num_seq file differenti
+	 * Genera un dataset composto da num_seq su un unico file
 	 * I file rappresentano sequenza avente lunghezza casuale comeprese tra [MIN_LENGHT_SEQ; MAX_LENGTH_SEQ]
 	 * @param num_seq
 	 * @throws FileNotFoundException
 	 */
-	public static void datasetGenUnique(String namedataset, String out_dir, int num_seq) throws FileNotFoundException{
+	public static void datasetUnique(String namedataset, String out_dir, int num_seq) throws FileNotFoundException{
 		
 		PrintStream ps = new PrintStream( new File(out_dir + "dataset.fasta") );
 		
 		for( int i = 0; i < num_seq; i++ ){
 			ps.printf("> %s_SEQ_%d\n", namedataset, i);
 			int nextSeqLenght = MIN_LENGTH_SEQ + RNG.nextInt(MAX_LENGTH_SEQ - MIN_LENGTH_SEQ);
-			sequenceGen(nextSeqLenght, ps);
-			ps.println("");
+			sequence(nextSeqLenght, ps);
+			ps.println("\n");
 		}
-		
 		ps.close();
 	}
 	
