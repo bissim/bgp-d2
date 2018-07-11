@@ -5,9 +5,12 @@ import java.io.FileNotFoundException;
 public class MainGenerator {
 	public static void main(String[] args) {
 		
+		SequenceGenerator.MIN_LENGTH_SEQ = 25000;
+		SequenceGenerator.MAX_LENGTH_SEQ = 50000;
+		
 		long starTime = System.currentTimeMillis();
 		try {
-			SequenceGenerator.datasetUnique("TestDataset1","",200000);
+			SequenceGenerator.dataset("TestDataset1","single_fasta/",10);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

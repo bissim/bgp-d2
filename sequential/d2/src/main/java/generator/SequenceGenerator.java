@@ -37,13 +37,19 @@ public class SequenceGenerator {
 	 */
 	public static void dataset(String namedataset, String out_dir, int num_seq) throws FileNotFoundException{
 		
-		for( int i = 0; i < num_seq; i++ ){		
-			PrintStream ps = new PrintStream( new File(out_dir + "seq_" + i + ".fasta") );
-			ps.printf("> %s_SEQ_%d\n", namedataset, i);
+		PrintStream listfiles = new PrintStream(new File(out_dir + namedataset + ".lst"));
+		
+		for( int i = 0; i < num_seq; i++ ){
+			String path_file = "seq" + i + ".fasta";
+			PrintStream ps = new PrintStream( new File(out_dir + path_file) );
+			listfiles.println(path_file);
+			ps.printf(">%sSEQ%d\n", namedataset, i);
 			int nextSeqLenght = MIN_LENGTH_SEQ + RNG.nextInt(MAX_LENGTH_SEQ - MIN_LENGTH_SEQ);				
 			sequence(nextSeqLenght, ps);
 			ps.close();		
 		}
+		
+		listfiles.close();
 	}
 	
 	/**
