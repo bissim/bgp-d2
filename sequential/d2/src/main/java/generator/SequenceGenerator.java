@@ -7,10 +7,11 @@ import java.util.Random;
 
 public class SequenceGenerator {
 
-	public static final char[] SIGMA = {'A', 'C', 'G', 'T'};
+	private static final char[] SIGMA = {'A', 'C', 'G', 'T'};
 	
 	public static int MIN_LENGTH_SEQ = 50;
 	public static int MAX_LENGTH_SEQ = 200;
+	public static int LENGTH_LINE_SEQ = 100; 
 	
 	public static Random RNG = new Random();
 	
@@ -21,11 +22,16 @@ public class SequenceGenerator {
 	 * @param out
 	 */
 	public static void sequence(int length, PrintStream out){
-		
-		for( int i = 0; i < length; i++ ){
+		int counter = 0;
+		for(int i = 0; i < length; i++){
+			if(counter==LENGTH_LINE_SEQ) {
+				out.print('\n');
+				counter=0;
+			}	
 			int nextChoice = RNG.nextInt(SIGMA.length);
 			char nextChar = SIGMA[nextChoice];		
-			out.print( nextChar );
+			out.print(nextChar);
+			counter++;
 		}	
 	}
 	
@@ -43,7 +49,8 @@ public class SequenceGenerator {
 			String path_file = "seq" + i + ".fasta";
 			PrintStream ps = new PrintStream( new File(out_dir + path_file) );
 			listfiles.println(path_file);
-			ps.printf(">%sSEQ%d\n", namedataset, i);
+			ps.printf(">gnl|%s|%d %s_SEQ_%d\n", namedataset, i, namedataset, i);
+			//ps.printf(">%sSEQ%d\n", namedataset, i);
 			int nextSeqLenght = MIN_LENGTH_SEQ + RNG.nextInt(MAX_LENGTH_SEQ - MIN_LENGTH_SEQ);				
 			sequence(nextSeqLenght, ps);
 			ps.close();		
