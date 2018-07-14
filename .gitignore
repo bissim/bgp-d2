@@ -1,1 +1,3 @@
-*.fasta
+**.fasta
+**.FASTA
+sequential/d2/target/
