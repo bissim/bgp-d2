@@ -3,24 +3,36 @@ package kmer;
 public class D2 {
 
     /**
-     * Alfabeto SIGMA delle sequenze del DNA 
+     * <samp>SIGMA</samp> (Σ) is the alphabet of nucleotides
+     * whose compositions create DNA sequences.
      */
     final static char[] SIGMA = {
         'A' , 'C' , 'G' , 'T'
     };
 
+    /**
+     * <samp>k_len</samp> is the length of k-mers to consider.
+     */
 	private int k_len;
-	
-	
+
+	/**
+	 * This constructor creates an object whose goal is
+	 * to find out the similarity score between two
+	 * genomic sequences.
+	 *
+	 * @param k_len - The length of k-mers to consider.
+	 */
 	public D2(int k_len) {
 		this.k_len = k_len;
 	}
-	
+
 	/**
-	 * Calcola la somiglianza delle stringhe secondo l'algoritmo D2
-	 * @param S sequenza genomica
-	 * @param Q sequenza genomica
-	 * @return score
+	 * Calculate similarity between sequences <samp>S</samp> and <samp>T</samp>
+	 * according to <strong>D2</strong> algorithm.
+	 *
+	 * @param S - The first genomic sequence
+	 * @param Q - The second genomic sequence
+	 * @return score - The similarity score between <samp>S</samp> and <samp>T</samp>.
 	 */
 	public long score(String S, String Q){
 		long score=0,Si=0,Qi=0;
@@ -36,12 +48,14 @@ public class D2 {
 		}
 		return score;
 	}
-	
+
 	/**
-	 * Calcola la somiglianza delle stringhe secondo l'algoritmo D2 normalizzato
-	 * @param A sequenza genomica
-	 * @param B sequenza genomica
-	 * @return scoreNorm
+	 * Calculate similarity between sequences <samp>A</samp> and <samp>B</samp>
+	 * according to <strong>D2</strong> algorithm and return a normalized score.
+	 *
+	 * @param A - The first genomic sequence
+	 * @param B - The second genomic sequence
+	 * @return scoreNorm - The normalized similarity score between <samp>A</samp> and <samp>B</samp>.
 	 */
 	public double scoreNormalized(String A,String B){
 		double scoreNorm=0;
@@ -54,33 +68,37 @@ public class D2 {
 		scoreNorm = - Math.log(S/(radical2*sigmaAA*sigmaBB/distanceEucl));
 		return scoreNorm;
 	}
-	
+
 	/**
-	 * Conta il numero di occorrenze del kmero kmer all'interno della stringa X
-	 * @param x sequenza genomica
-	 * @param kmer k-mero da ricercare
-	 * @return occurrance occorrenza del kmer
+	 * Count how many times the k-mer <samp>kmer</samp>
+	 * occurs within the string <samp>X</samp>.
+	 *
+	 * @param X - The string which search k-mers into
+	 * @param kmer - The k-mer to search within <samp>X</samp>
+	 * @return occurrance - k-mer occurrences
 	 */
-	private long occurrance(String x, String kmer){
+	private long occurrance(String X, String kmer){
 		long result = 0;
 		int i = 0;
-        while ((i = x.indexOf(kmer, i)) != -1) {
+        while ((i = X.indexOf(kmer, i)) != -1) {
             i += kmer.length();
             result++;
-        }		
-		return result;		
+        }
+		return result;
 	}
-	
+
 	/**
-	 * Ottieni il k-mero in base al prossimo indice rankIndex, che definisce il rank 
-	 * in orgine lessicografico del k-mero
-	 * @param klength lunghezza k-mero
-	 * @param rankIndex rank lessicografico del k-mero
-	 * @return nextKmer prossimo k-mero
+	 * Get a k-mer according to next <samp>rankIndex</samp> index
+	 * defining its position in Σ<sup>k</sup> according to
+	 * lexicographic order.
+	 *
+	 * @param klength - The length of the k-mer
+	 * @param rankIndex - The k-mer rank according to lexicographic order
+	 * @return nextKmer - The next k-mer
 	 */
 	private String nextKmer(int klength,int rankIndex){
 		String s = this.convert(rankIndex);
-		int remainder = klength - s.length();	
+		int remainder = klength - s.length();
 		for(int i = 0; i < remainder; i++){
 			s = "A".concat(s);
 		}
@@ -88,12 +106,16 @@ public class D2 {
 	}
 
 	/**
-	 * Ottieni il k-mero in base al prossimo indice rankIndex, che definisce il rank 
-	 * in orgine lessicografico del k-mero.
-	 * Quindi si converte l'indice lessicografico decimale in base-4 per poi codificarlo nell'alfabeto sigma {A,C,G,T}
-	 * L'implentazione è basato su toString(x, radix) di Integer.
-	 * @param i
-	 * @return string convert 
+	 * Get a k-mer according to its lexicographic rank.<br />
+	 * Rank <samp>i</samp> is converted into a base 4 value that
+	 * gets codificated into a value from <strong>Σ = {A, C, G,
+	 * T}</strong>
+	 * alphabet.<br >
+	 * This implementation is based on {@link Integer#toString(int, int)} method.
+	 *
+	 * @param i - The rank of a k-mer
+	 * @return The k-mer associated to given rank <samp>i</samp>
+	 * @see Integer#toString(int, int)
 	 */
     private String convert(int i) {
     	int radix = 4;
@@ -113,6 +135,6 @@ public class D2 {
         }
         return new String(buf, charPos, (33 - charPos));
     }
-	
-	
+
+
 }

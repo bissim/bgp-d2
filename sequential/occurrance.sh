@@ -3,7 +3,7 @@
 PATH=$PATH:bin
 
 
-KMIN=3 
+KMIN=3
 KMAX=15
 NUMSEQ=10
 
@@ -22,7 +22,7 @@ mkdir $DIR_OUT
 for (( x=0; x<$NUMSEQ; x++ ))
 do
 
-	echo "Sequenza $x"
+	echo "Sequence $x"
 
 	mkdir $DIR_TMP/seq$x
 	mkdir $DIR_OUT/seq$x
@@ -30,7 +30,7 @@ do
 	for (( y=$KMIN; y<=$KMAX; y++ ))
 	do
 
-		echo "---> Sequenza $x, Conteggio k-$y"
+		echo "---> Sequence $x, Counter k-$y"
 
 		#echo "$x-$y"
 		kmc -m$MEM -k$y -fa -ci$CI -cs$CS $DIR_DATASET/seq$x.fasta $DIR_TMP/seq$x/db_k$y.res $DIR_TMP
