@@ -10,7 +10,7 @@ public class MainGenerator {
 
 		long starTime = System.currentTimeMillis();
 		try {
-			SequenceGenerator.dataset("TestDataset1", "single_fasta/", 10);
+			SequenceGenerator.datasetUnique("TestDataset1", "dataset2", "", 2);
 		} catch (FileNotFoundException e) {
 			System.err.println("Error: " + e.getMessage() + ".");
 		}

@@ -76,9 +76,9 @@ public class SequenceGenerator {
 	 * @param numSeq - The  number of sequences to generate
 	 * @throws FileNotFoundException - Specified output file has not been found
 	 */
-	public static void datasetUnique(String datasetName, String outDir, int numSeq) throws FileNotFoundException {
+	public static void datasetUnique(String datasetName, String nameFile, String outDir, int numSeq) throws FileNotFoundException {
 
-		PrintStream printer = new PrintStream(new File(outDir + "dataset.fasta"));
+		PrintStream printer = new PrintStream(new File(outDir + nameFile+".fasta"));
 
 		for (int i = 0; i < numSeq; i++) {
 			printer.printf(">gnl|%s|%d %s_SEQ_%d\n", datasetName, i, datasetName, i);

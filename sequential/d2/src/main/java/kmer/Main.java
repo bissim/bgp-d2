@@ -1,14 +1,22 @@
 package kmer;
 
+import java.io.IOException;
+import java.math.BigInteger;
+
 public class Main {
 
 	public static void main(String[] args) {
 
-		D2 d2 = new D2(12);
+		D2 d2 = new D2(4);
 		long starTime = System.currentTimeMillis();
-		String Q = "ACAAGATGCCAT";
-		String S = "GCTGAATGCATG";
-		long score = d2.score(S, Q);
+		String Q = "C:\\Users\\Mary\\Desktop\\KMC3.1.0.windows\\dataset1_k4.res";
+		String S = "C:\\Users\\Mary\\Desktop\\KMC3.1.0.windows\\dataset2_k4.res";
+		BigInteger score = null;
+		try {
+			score = d2.score(S, Q);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		long endTime = System.currentTimeMillis();
 
 		double totTime = (double)(endTime - starTime);
