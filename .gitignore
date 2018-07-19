@@ -1,3 +1,6 @@
+*/target/
+*/.settings/**
 **.fasta
 **.FASTA
-sequential/d2/target/
+*.class
+*/.classpath
