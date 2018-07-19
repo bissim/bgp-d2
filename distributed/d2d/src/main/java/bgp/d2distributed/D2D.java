@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.StringTokenizer;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
@@ -83,8 +82,11 @@ public class D2D {
 
 	public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
 		Configuration conf = new Configuration();
-		Job job = Job.getInstance(conf, "word_count");
+		System.out.println("Configuration conf = new Configuration();");
+		Job job = Job.getInstance(conf, "d2d");
+		System.out.println("Job job = Job.getInstance(conf, \"d2d\");");
 		job.setJarByClass(D2D.class);
+		System.out.println("job.setJarByClass(D2D.class);");
 		job.setMapperClass(PartialScoreMapper.class);
 		job.setReducerClass(D2ScoreReducer.class);
 		job.setOutputKeyClass(Object.class);
@@ -93,7 +95,7 @@ public class D2D {
 		FileInputFormat.addInputPath(job, new Path(args[0]));
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
 		System.exit(job.waitForCompletion(true) ? 0 : 1);
-
 	}
+
 
 }
