@@ -30,10 +30,10 @@ public class D2D {
 	 */
 
 	public static class PartialScoreMapper extends Mapper<Object, Text, Text, LongWritable> {
-		
+
 		private HashMap<String, Long> Mapfile1 = new HashMap<String, Long>();
 		private HashMap<String, Long> Mapfile2 = new HashMap<String, Long>();
-		
+
 		@Override
 		protected void setup(Context context) throws IOException, InterruptedException {
 			Path path1 = new Path("hdfs:/user/user/INPUT/seq0_all.res");
@@ -66,25 +66,20 @@ public class D2D {
 
 		@Override
 		public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-			System.out.println("START MAP \n value: "+value.toString());
 			Iterator<Entry<String,Long>> it1 = Mapfile1.entrySet().iterator();
 			Entry<String, Long> currEntry = null;
 			String currKmer = "";
 			long currOcc1 = 0, currOcc2 = 0;
 			Long partialScore = new Long(0); 
-			while(it1.hasNext()){
-				currEntry = it1.next();
-				currKmer = currEntry.getKey();
-				currOcc1 = currEntry.getValue();
-				if(Mapfile2.containsKey(currKmer)) {
-					currOcc2 = Mapfile2.get(currKmer);
-					partialScore = currOcc1*currOcc2;
-					context.write(new Text(currKmer), new LongWritable(partialScore));
-				}
-				else
-					context.write(new Text(currKmer), new LongWritable(0));			
-			}
-
+			currEntry = it1.next();
+			currKmer = currEntry.getKey();
+			currOcc1 = currEntry.getValue();
+			if(Mapfile2.containsKey(currKmer)) {
+				currOcc2 = Mapfile2.get(currKmer);
+				partialScore = currOcc1*currOcc2;
+			}	
+			context.write(new Text("Seq0-Seq1"), new LongWritable(partialScore));
+			System.out.println("END MAP \n partialScore: "+ partialScore);
 		}
 	}
 
