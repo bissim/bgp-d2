@@ -103,8 +103,8 @@ public class D2Coupled {
 				/////////System.out.printf("TOP:%d --  LINE: |%s|\n", topCounter, line);
 				
 				String[] arr = line.split("\t");
-				String kmer = arr[0];
-				BigInteger occurrance = new BigInteger(arr[1]);
+				String kmer = arr[1];
+				BigInteger occurrance = new BigInteger(arr[0]);
 				
 				kmerMap.put(kmer, occurrance);
 				
