@@ -43,7 +43,7 @@ public class SequenceGenerator {
 	 * <samp>[MIN_LENGTH_SEQ; MAX_LENGTH_SEQ]</samp> range.
 	 *
 	 * @param datasetName - The name of the dataset to generate
-	 * @param outDir - The output file wich sequences will be written into
+	 * @param outDir - The output file which sequences will be written into
 	 * @param numSeq - The  number of sequences to generate
 	 * @throws FileNotFoundException - Specified output file has not been found
 	 */
@@ -72,13 +72,14 @@ public class SequenceGenerator {
 	 * <samp>[MIN_LENGTH_SEQ; MAX_LENGTH_SEQ]</samp> range.
 	 *
 	 * @param datasetName - The name of the dataset to generate
-	 * @param outDir - The output file wich sequences will be written into
+	 * @param nameFile - The name of file that contains all sequences
+	 * @param outDir - The output file which sequences will be written into
 	 * @param numSeq - The  number of sequences to generate
 	 * @throws FileNotFoundException - Specified output file has not been found
 	 */
 	public static void datasetUnique(String datasetName, String nameFile, String outDir, int numSeq) throws FileNotFoundException {
 
-		PrintStream printer = new PrintStream(new File(outDir + nameFile+".fasta"));
+		PrintStream printer = new PrintStream(new File(outDir + nameFile));
 
 		for (int i = 0; i < numSeq; i++) {
 			printer.printf(">gnl|%s|%d %s_SEQ_%d\n", datasetName, i, datasetName, i);

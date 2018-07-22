@@ -1,55 +1,52 @@
 package kmer;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 public class D2Coupled {	
 	
 	/**
-	 * <samp>k_len</samp> is the length of k-mers to consider.
-	 */
-	private int k_len;
-	
-	/**
 	 * <samp>top</samp> is ... //TODO 
 	 */
 	private int top;
 	
-	/**
-	 * This constructor creates an object whose goal is
-	 * to find out the similarity score between two
-	 * genomic sequences.
-	 *
-	 * @param k_len - The length of k-mers to consider.
-	 */
-	public D2Coupled(int k_len) {
-		this.k_len = k_len;
-		this.top = 1000;
-	}
 	
-	public D2Coupled(int k_len, int top){
-		this.k_len = k_len;
+	public D2Coupled(int top){
 		this.top = top;
 	}
 	
 	
-	public BigInteger[][] score(String[] pathsOutputKMC) throws IOException{
-		BigInteger[][] matrixD2 = new BigInteger[pathsOutputKMC.length][pathsOutputKMC.length];
+	public List<String> score(String[] pathsOutputKMC) throws IOException{
+		
+		//BigInteger[][] matrixD2 = new BigInteger[pathsOutputKMC.length][pathsOutputKMC.length];
+		ArrayList<String> logger = new ArrayList<>();
+		
+		File osFSNaming;;
 		
 		for( int i = 0; i < pathsOutputKMC.length; i++ ){
-			for( int j = i; j < pathsOutputKMC.length; j++ ){
+			for( int j = i + 1; j < pathsOutputKMC.length; j++ ){
+				
 				BigInteger currScore = this.score(pathsOutputKMC[i], pathsOutputKMC[j]);
-				matrixD2[i][j] = currScore;
-				matrixD2[j][i] = currScore;
+				
+				osFSNaming = new File(pathsOutputKMC[i]);
+				String nameS = osFSNaming.getName();
+				
+				osFSNaming = new File(pathsOutputKMC[j]);
+				String nameQ = osFSNaming.getName();
+				
+				logger.add(nameS+"-"+nameQ+": "+currScore);
 			}
 		}
 		
-		return matrixD2;
+		return logger;
 	}
 	
 	
@@ -104,7 +101,7 @@ public class D2Coupled {
 				
 				String[] arr = line.split("\t");
 				String kmer = arr[1];
-				BigInteger occurrance = new BigInteger(arr[0]);
+				BigInteger occurrance = new BigInteger(arr[2]);
 				
 				kmerMap.put(kmer, occurrance);
 				

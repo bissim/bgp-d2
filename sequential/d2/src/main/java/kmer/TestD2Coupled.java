@@ -11,8 +11,9 @@ public class TestD2Coupled {
 		String SEQ0 = "/home/sergio/UniSpec/corsi/SOA/tmp_kmc/occ/seq0_all.res";
 		String SEQ1 = "/home/sergio/UniSpec/corsi/SOA/tmp_kmc/occ/seq1_all.res";
 		
-		D2Coupled d2c = new D2Coupled(4, 1000);
+		D2Coupled d2c = new D2Coupled(1000);
 		
+		/*
 		Map<String, BigInteger> kmerMap = d2c.loadKmersFromFile(SEQ0);
 		
 		System.out.println("HashMap di Occorrenze:");
@@ -26,6 +27,7 @@ public class TestD2Coupled {
 		result = d2c.score(SEQ1, SEQ0);
 		
 		System.out.println("D2_score(SEQ1,SEQ0) = " + result);
+		*/
 		
 		
 		
@@ -35,15 +37,30 @@ public class TestD2Coupled {
 				"/home/sergio/UniSpec/corsi/SOA/tmp_kmc/occ/seq2_all.res",
 				"/home/sergio/UniSpec/corsi/SOA/tmp_kmc/occ/seq3_all.res",
 				"/home/sergio/UniSpec/corsi/SOA/tmp_kmc/occ/seq4_all.res",
+				/*
 				"/home/sergio/UniSpec/corsi/SOA/tmp_kmc/occ/seq5_all.res",
 				"/home/sergio/UniSpec/corsi/SOA/tmp_kmc/occ/seq6_all.res",
 				"/home/sergio/UniSpec/corsi/SOA/tmp_kmc/occ/seq7_all.res",
 				"/home/sergio/UniSpec/corsi/SOA/tmp_kmc/occ/seq8_all.res",
-				"/home/sergio/UniSpec/corsi/SOA/tmp_kmc/occ/seq9_all.res"
+				"/home/sergio/UniSpec/corsi/SOA/tmp_kmc/occ/seq9_all.res" */
 		};
 		
+		/*
 		BigInteger[][] matrixD2 = d2c.score(listSequences);
 		printMatrixD2(matrixD2);
+		*/
+		
+		for( int i = 0; i < listSequences.length; i++ ){
+			String pathS = listSequences[i];
+			for( int j = i+1; j < listSequences.length; j++ ){
+				String pathQ = listSequences[j];
+				
+				BigInteger d2res = d2c.score(pathS, pathQ);
+				
+				System.out.printf("%s-%s :: %d\n", pathS, pathQ, d2res);
+				
+			}
+		}
 		
 		
 	}
