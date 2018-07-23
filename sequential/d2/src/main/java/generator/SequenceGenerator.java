@@ -12,6 +12,8 @@ public class SequenceGenerator {
 	public static int MIN_LENGTH_SEQ = 50;
 	public static int MAX_LENGTH_SEQ = 200;
 	public static int LENGTH_LINE_SEQ = 100;
+	
+	public static int BUF_SIZE = 5242880; // 5MB
 
 	public static Random RNG = new Random();
 
@@ -23,18 +25,19 @@ public class SequenceGenerator {
 	 * @param out - The output file which sequence will be written into
 	 */
 	public static void sequence(int length, PrintStream out) {
-		int counter = 0;
-		for (int i = 0; i < length; i++) {
-			if (counter == LENGTH_LINE_SEQ) {
-				out.print('\n');
-				counter = 0;
-			}
+		//int counter = 0;
+		StringBuffer sb = new StringBuffer(BUF_SIZE);
+		for (int i = 1; i <= length; i++) {
 
 			int nextChoice = RNG.nextInt(SIGMA.length);
 			char nextChar = SIGMA[nextChoice];
-			out.print(nextChar);
-			counter++;
+			sb = sb.append(nextChar);
+			if( i % BUF_SIZE == 0 || i == length ) {
+				out.print(sb);
+			}
+		
 		}
+		
 	}
 
 	/**
@@ -55,8 +58,8 @@ public class SequenceGenerator {
 			String pathFile = "seq" + i + ".fasta";
 			PrintStream printer = new PrintStream(new File(outDir + pathFile));
 			listFiles.println(pathFile);
-			printer.printf(">gnl|%s|%d %s_SEQ_%d\n", datasetName, i, datasetName, i);
-			//ps.printf(">%sSEQ%d\n", namedataset, i);
+			//////printer.printf(">gnl|%s|%d %s_SEQ_%d\n", datasetName, i, datasetName, i);
+			printer.printf(">seq%d\n", i);
 			int nextSeqLenght = MIN_LENGTH_SEQ + RNG.nextInt(MAX_LENGTH_SEQ - MIN_LENGTH_SEQ);
 			sequence(nextSeqLenght, printer);
 			printer.close();
