@@ -1,7 +1,9 @@
-package kmer;
+package test;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
+
+import kmer.D2;
 
 public class TestgetNextOccurrance {
 	public static void main(String[] args){

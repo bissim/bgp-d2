@@ -1,9 +1,11 @@
-package kmer;
+package test;
 
 import java.io.IOException;
 import java.math.BigInteger;
 
-public class Main {
+import kmer.D2;
+
+public class TestD2 {
 
 	public static void main(String[] args) {
 

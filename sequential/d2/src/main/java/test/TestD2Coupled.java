@@ -1,8 +1,10 @@
-package kmer;
+package test;
 
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Map;
+
+import kmer.D2Coupled;
 
 public class TestD2Coupled {
 
