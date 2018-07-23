@@ -47,7 +47,7 @@ do
 		kmc  -k$y -fa -ci$CI -cs$CS $DIR_DATASET/seq$x.fasta $DIR_TMP/seq$x/seq$x.res $DIR_TMP
 
 		echo "---> kmc_dump_indexed $DIR_TMP/seq$x/db_k$y.res $DIR_OUT/seq$x/k$y.res"
-		kmc_dump_mod $DIR_TMP/seq$x/seq$x.res $DIR_OUT/seq$x/k$y.res
+		kmc_dump_indexed $DIR_TMP/seq$x/seq$x.res $DIR_OUT/seq$x/k$y.res
 
 		sort -n -r -k3 $DIR_OUT/seq$x/k$y.res -o $DIR_OUT/seq$x/k"$y"-ordered.res
 
@@ -67,3 +67,7 @@ done
 
 rm -rf $DIR_TMP/seq*
 rmdir $DIR_TMP
+
+
+env GZIP=-9 tar cvzf kmers.tar.gz $DIR_OUT
+env GZIP=-9 tar cvzf sequences.tar.gz $DIR_DATASET
