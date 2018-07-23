@@ -50,13 +50,13 @@ do
 		echo "---> kmc_dump_indexed $DIR_TMP/seq$x/db_k$y.res $DIR_OUT/seq$x/k$y.res"
 		kmc_dump_indexed $DIR_TMP/seq$x/seq$x.res $DIR_OUT/seq$x/k$y.res
 
-		sort -n -r -k3 $DIR_OUT/seq$x/k$y.res -o $DIR_OUT/seq$x/k"$y"-ordered.res
+		#sort -n -r -k3 $DIR_OUT/seq$x/k$y.res -o $DIR_OUT/seq$x/k"$y"-ordered.res
 
-		cat $DIR_OUT/seq$x/k"$y"-ordered.res >> $DIR_OUT/seq"$x"_all.res
+		cat $DIR_OUT/seq$x/k$y >> $DIR_OUT/seq"$x"_all.res
 		printf "\n" >> $DIR_OUT/seq"$x"_all.res
 
 		rm $DIR_OUT/seq$x/k$y.res
-		rm $DIR_OUT/seq$x/k"$y"-ordered.res
+		#rm $DIR_OUT/seq$x/k"$y"-ordered.res
 
 		rm $DIR_TMP/seq$x/seq$x.res*
 
