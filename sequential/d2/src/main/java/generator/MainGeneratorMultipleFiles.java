@@ -37,6 +37,9 @@ public class MainGeneratorMultipleFiles {
 		SequenceGenerator.MIN_LENGTH_SEQ = MIN_LENGTH_SEQ;
 		SequenceGenerator.MAX_LENGTH_SEQ = MAX_LENGTH_SEQ;
 
+		System.out.println("MIN_LENGTH_SEQ : " + SequenceGenerator.MIN_LENGTH_SEQ);
+		System.out.println("MAX_LENGTH_SEQ : " + SequenceGenerator.MAX_LENGTH_SEQ);
+		
 		long starTime = System.currentTimeMillis();
 		try {
 			SequenceGenerator.dataset(DATABASE_NAME, OUTDIR, NUM_SEQ);
