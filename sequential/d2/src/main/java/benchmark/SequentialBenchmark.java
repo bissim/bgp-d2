@@ -11,15 +11,16 @@ public class SequentialBenchmark {
 
 	public static void main(String[] args) throws IOException {
 		
-		if( args.length != 3 ) {
-			System.out.println("You must specify <INPUT_DIR> <TOP_LINES_OCCURANCES> <FLAG_ONLY_TIME>");
+		if( args.length != 4 ) {
+			System.out.println("You must specify <INPUT_DIR> <NUM_FILES> <TOP_LINES_OCCURANCES> <FLAG_ONLY_TIME>");
 			System.out.println("   FLAG_ONLY_TIME: must be [yes,no] -- if yes, print also the result of d2 score on stdout");
 			System.exit(-1);
 		}
 		
 		String INPUT_DIR = args[0]; //"/Users/you/folder/"
-		int TOP_LINES_OCCURANCES = Integer.valueOf(args[1]);
-		String FLAG_ONLY_TIME = args[2];
+		int NUM_FILES = Integer.valueOf(args[1]);
+		int TOP_LINES_OCCURANCES = Integer.valueOf(args[2]);
+		String FLAG_ONLY_TIME = args[3];
 		
 		File folder = new File(INPUT_DIR);
 		File[] listOfFiles = folder.listFiles();
@@ -27,9 +28,12 @@ public class SequentialBenchmark {
 		
 		int i = 0;
 		for( File f: listOfFiles ) {
-			if( f.isFile() ) {
-				listOfFileString.add(f.getAbsolutePath());
-				i++;	
+			if( NUM_FILES != i ) {
+				if( f.isFile() ) {
+					//System.out.println("--> " + f.getAbsolutePath());
+					listOfFileString.add(f.getAbsolutePath());
+					i++;
+				}
 			}
 		}
 		
