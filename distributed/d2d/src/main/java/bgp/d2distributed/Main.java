@@ -22,6 +22,15 @@ public class Main {
 
 	public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
 		
+		if( args.length != 3 ) {
+			System.out.println("<INPUT_DIR> <OUTPUT_DIR> <NUM_REDUCE_TASK>");
+			System.exit(-1);
+		}
+		
+		String INPUT_DIR = args[0];
+		String OUTPUT_DIR = args[1];
+		int NUM_REDUCE_TASK = Integer.valueOf(args[2]);
+		
 		Configuration conf = new Configuration();
 		
 		Job job = Job.getInstance(conf, "D2_Score_fase1");
@@ -35,14 +44,14 @@ public class Main {
 		job.setInputFormatClass(TextInputFormat.class);
 		job.setOutputFormatClass(TextOutputFormat.class);
 		System.out.println("Num reduce task: " + job.getNumReduceTasks());
-		//job.setNumReduceTasks(1);
-		FileInputFormat.addInputPath(job, new Path(args[0]));
+		job.setNumReduceTasks(NUM_REDUCE_TASK);
+		FileInputFormat.addInputPath(job, new Path(INPUT_DIR));
 		
 		FileSystem hdfs = FileSystem.get(conf);
-		if (hdfs.exists(new Path(args[1])))
-			hdfs.delete(new Path(args[1]), true);
+		if (hdfs.exists(new Path(OUTPUT_DIR)))
+			hdfs.delete(new Path(OUTPUT_DIR), true);
 		
-		FileOutputFormat.setOutputPath(job, new Path(args[1]));
+		FileOutputFormat.setOutputPath(job, new Path(OUTPUT_DIR));
 		
 		job.waitForCompletion(true);
 		
@@ -58,12 +67,13 @@ public class Main {
 		job2.setMapOutputValueClass(LongWritable.class);
 		job2.setInputFormatClass(TextInputFormat.class);
 		job2.setOutputFormatClass(TextOutputFormat.class);
-		FileInputFormat.addInputPath(job2, new Path(args[1]));
+		job2.setNumReduceTasks(NUM_REDUCE_TASK);
+		FileInputFormat.addInputPath(job2, new Path(OUTPUT_DIR));
 		
-		if (hdfs.exists(new Path(args[1]+"2")))
-			hdfs.delete(new Path(args[1]+"2"), true);
+		if (hdfs.exists(new Path(OUTPUT_DIR+"2")))
+			hdfs.delete(new Path(OUTPUT_DIR+"2"), true);
 		
-		FileOutputFormat.setOutputPath(job2, new Path(args[1]+"2"));
+		FileOutputFormat.setOutputPath(job2, new Path(OUTPUT_DIR+"2"));
 		
 		job2.waitForCompletion(true);
 		
