@@ -16,13 +16,7 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import bgp.d2distributed.D2D.IndexerMapper;
 import bgp.d2distributed.D2D.ScoreReducer;
 
-/**
- * Main class Hadoop
- * Run the D2D algorithm, if NUM_REDUCE_TASK is equal to 1, only one job is started. 
- * Otherwise 2 jobs are started: the first create partial D2 score and the other sum these results.
- *
- */
-public class Main {
+public class Main1 {
 
 	public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
 		
@@ -35,22 +29,9 @@ public class Main {
 		String OUTPUT_DIR = args[1];
 		int NUM_REDUCE_TASK = Integer.valueOf(args[2]);
 		
-		if( NUM_REDUCE_TASK < 1 ) {
-			System.out.println("Sorry, NUM_REDUCE_TASK must be greater than 0 !");
-			System.exit(-1);
-		}
-		
 		Configuration conf = new Configuration();
 		
-		Job job;
-		
-		if( NUM_REDUCE_TASK == 1 ) {
-			job = Job.getInstance(conf, "D2_Score_UNICO");
-		}
-		else {
-			job = Job.getInstance(conf, "D2_Score_FASE1");
-		}
-		
+		Job job = Job.getInstance(conf, "D2_Score_FASE1");
 		job.setJarByClass(D2D.class); //setta la classe del programma
 		
 		job.setMapperClass(IndexerMapper.class); 			//setta la classe Mapper
@@ -80,39 +61,38 @@ public class Main {
 		
 		///System.exit(job.waitForCompletion(true) ? 0 : 1);	
 		
-		if( NUM_REDUCE_TASK > 1 ) {
-			////fase 2, somma score parziali
-			Job job2 = Job.getInstance(conf, "D2_Score_FASE2");
-			job2.setJarByClass(D2D.class); //setta la classe del programma
-			
-			job2.setMapperClass(SumPhase.IdentityMapper.class); 			//setta la classe Mapper
-			job2.setReducerClass(SumPhase.SumReducer.class); 		//setta la classe Reducer
-			
-			//REDUCER
-			job2.setOutputKeyClass(Text.class); //setta la key class del reducer
-			job2.setOutputValueClass(LongWritable.class); //setta la value class del reducer
-			
-			//MAPPER
-			job2.setMapOutputKeyClass(Text.class); //setta la key class output del mapper
-			job2.setMapOutputValueClass(LongWritable.class); //setta la value class output del mapper
-			
-			
-			String OUTPUT_DIR2 = args[1]+"2";
-			
-			job2.setInputFormatClass(TextInputFormat.class);
-			job2.setOutputFormatClass(TextOutputFormat.class);
-			System.out.println("Num reduce task (fase2): " + job2.getNumReduceTasks());
-			//job2.setNumReduceTasks(NUM_REDUCE_TASK); /// DEVE ESSERCI UN SOLO REDUCER, GIUSTO???
-			FileInputFormat.addInputPath(job2, new Path(OUTPUT_DIR));
-			
-			if (hdfs.exists(new Path(OUTPUT_DIR2)))
-				hdfs.delete(new Path(OUTPUT_DIR2), true);
-			
-			FileOutputFormat.setOutputPath(job2, new Path(OUTPUT_DIR2));
-			
-			job2.waitForCompletion(true);
-		}
+		
+		////fase 2, somma score parziali
+		Job job2 = Job.getInstance(conf, "D2_Score_FASE2");
+		job2.setJarByClass(D2D.class); //setta la classe del programma
+		
+		job2.setMapperClass(SumPhase.IdentityMapper.class); 			//setta la classe Mapper
+		job2.setReducerClass(SumPhase.SumReducer.class); 		//setta la classe Reducer
+		
+		//REDUCER
+		job2.setOutputKeyClass(Text.class); //setta la key class del reducer
+		job2.setOutputValueClass(LongWritable.class); //setta la value class del reducer
+		
+		//MAPPER
+		job2.setMapOutputKeyClass(Text.class); //setta la key class output del mapper
+		job2.setMapOutputValueClass(LongWritable.class); //setta la value class output del mapper
+		
+		
+		String OUTPUT_DIR2 = args[1]+"2";
+		
+		job2.setInputFormatClass(TextInputFormat.class);
+		job2.setOutputFormatClass(TextOutputFormat.class);
+		System.out.println("Num reduce task (fase2): " + job2.getNumReduceTasks());
+		//job2.setNumReduceTasks(NUM_REDUCE_TASK);
+		FileInputFormat.addInputPath(job2, new Path(OUTPUT_DIR));
+		
+		if (hdfs.exists(new Path(OUTPUT_DIR2)))
+			hdfs.delete(new Path(OUTPUT_DIR2), true);
+		
+		FileOutputFormat.setOutputPath(job2, new Path(OUTPUT_DIR2));
+		
+		job2.waitForCompletion(true);
 				
 	}
-	
+
 }
