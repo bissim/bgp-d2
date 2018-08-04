@@ -2,6 +2,7 @@ package bgp.d2distributed;
 
 import java.io.IOException;
 
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -16,6 +17,15 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import bgp.d2distributed.D2D.IndexerMapper;
 import bgp.d2distributed.D2D.ScoreReducer;
 
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+import org.apache.commons.io.IOUtils;
+
 /**
  * Main class Hadoop
  * Run the D2D algorithm, if NUM_REDUCE_TASK is equal to 1, only one job is started. 
@@ -24,27 +34,60 @@ import bgp.d2distributed.D2D.ScoreReducer;
  */
 public class Main {
 
-	public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
+	private static double TASK_REDUCE_FACTOR = 0.95;//1.75;
+	
+	public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException, JSONException {
 		
-		if( args.length != 3 ) {
-			System.out.println("<INPUT_DIR> <OUTPUT_DIR> <NUM_REDUCE_TASK>");
+		if( args.length < 3 ) {
+			System.out.println("<INPUT_DIR> <OUTPUT_DIR> <MEM_MB_SIZE_CONTAINER> [<TASK_REDUCE_FACTOR>]");
+			System.out.println("   MEM_MB_SIZE_CONTAINER :: max memory per container, defined in mapred-site.xml");
+			System.out.println("   TASK_REDUCE_FACTOR :: optional, factor defined in Hadoop doc to set number of task reduce; default 0.95");
 			System.exit(-1);
 		}
 		
 		String INPUT_DIR = args[0];
 		String OUTPUT_DIR = args[1];
-		int NUM_REDUCE_TASK = Integer.valueOf(args[2]);
+		/////int NUM_REDUCE_TASK = Integer.valueOf(args[2]);
+		String MASTER_NAME = "Master";
+		int MEM_MB_SIZE_CONTAINER = Integer.valueOf(args[2]);////5734; //7168;
 		
-		if( NUM_REDUCE_TASK < 1 ) {
-			System.out.println("Sorry, NUM_REDUCE_TASK must be greater than 0 !");
+		if( MEM_MB_SIZE_CONTAINER < 1 ) {
+			System.out.println("Sorry, MEM_MB_SIZE_CONTAINER must be greater than 0 !");
 			System.exit(-1);
 		}
 		
-		Configuration conf = new Configuration();
+		if( args.length == 4 ) {
+			TASK_REDUCE_FACTOR = Integer.valueOf(args[3]);
+		}
 		
+		/////GET METRICS
+		System.out.println("Getting Metrics with REST call...");
+		HttpClient client = new DefaultHttpClient();
+		HttpGet request = new HttpGet("http://"+ MASTER_NAME +":8088/ws/v1/cluster/metrics");
+		HttpResponse response = client.execute(request);
+		String jsonString = IOUtils.toString(response.getEntity().getContent());
+		//System.out.println("jsonString : |" + jsonString + "|");
+		JSONObject jsonObj = new JSONObject( jsonString );
+		//System.out.println("jsonObj : |" + jsonObj.toString() + "|");
+		int availableMB = jsonObj.getJSONObject("clusterMetrics").getInt("availableMB");
+		int activeNodes = jsonObj.getJSONObject("clusterMetrics").getInt("activeNodes");
+		
+		System.out.println("availableMB : " + availableMB);
+		System.out.println("activeNodes : " + activeNodes);
+		System.out.println("MEM_MB_SIZE_CONTAINER : " + MEM_MB_SIZE_CONTAINER);
+		System.out.println("TASK_REDUCE_FACTOR : " + TASK_REDUCE_FACTOR);
+		
+		int MAX_CONTAINER_PER_NODE = availableMB / activeNodes / MEM_MB_SIZE_CONTAINER;
+		
+		int NUM_REDUCE_TASK_DYN = (int)(TASK_REDUCE_FACTOR * (activeNodes * MAX_CONTAINER_PER_NODE));
+		
+		System.out.println("NUM_REDUCE_TASK_DYN : " + NUM_REDUCE_TASK_DYN);
+		
+		
+		Configuration conf = new Configuration();		
 		Job job;
 		
-		if( NUM_REDUCE_TASK == 1 ) {
+		if( NUM_REDUCE_TASK_DYN == 1 ) {
 			job = Job.getInstance(conf, "D2_Score_UNICO");
 		}
 		else {
@@ -66,7 +109,7 @@ public class Main {
 		
 		job.setInputFormatClass(TextInputFormat.class);
 		job.setOutputFormatClass(TextOutputFormat.class);
-		job.setNumReduceTasks(NUM_REDUCE_TASK);
+		job.setNumReduceTasks(NUM_REDUCE_TASK_DYN);
 		System.out.println("Num reduce task: " + job.getNumReduceTasks());
 		FileInputFormat.addInputPath(job, new Path(INPUT_DIR));
 		
@@ -80,7 +123,7 @@ public class Main {
 		
 		///System.exit(job.waitForCompletion(true) ? 0 : 1);	
 		
-		if( NUM_REDUCE_TASK > 1 ) {
+		if( NUM_REDUCE_TASK_DYN > 1 ) {
 			////fase 2, somma score parziali
 			Job job2 = Job.getInstance(conf, "D2_Score_FASE2");
 			job2.setJarByClass(D2D.class); //setta la classe del programma
