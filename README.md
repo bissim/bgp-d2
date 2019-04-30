@@ -8,6 +8,8 @@ Here is our implementation for *distributed D2 distance algorithm* for k-mers by
   - [Hadoop cluster configuration](#hadoop-cluster-configuration)
     - [Hardware](#hardware)
     - [Hadoop configuration](#hadoop-configuration)
+  - [Repository](#repository)
+    - [Installation](#installation)
   - [References](#references)
   - [Authors](#authors)
 
@@ -49,6 +51,22 @@ Each Hadoop node had the following configuration:
   - ```mapreduce.map.java.opts```: -Xmx3276M
   - ```mapreduce.reduce.java.opts```: -Xmx5734M
   - ```mapreduce.[map|reduce].cpu.vcores```: 2
+
+## Repository
+
+The **bgp-d2** repository consist of three main folders:
+
+- [sequential D2 classes](https://github.com/bissim/bgp-d2/tree/master/sequential/d2)
+- [distributed D2 classes](https://github.com/bissim/bgp-d2/tree/master/distributed/d2d)
+- [benchmark scripts](https://github.com/bissim/bgp-d2/tree/master/benchmark)
+
+### Installation
+
+Both sequential and distributed projects can be built by running the following command:
+
+```bash
+mvn clean compile javadoc:javadoc
+```
 
 ## References
 
