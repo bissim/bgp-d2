@@ -1,4 +1,8 @@
-# occurrance4.sh
+# This scrpt deals with calculating occurrences of variable-length
+# k-mers within given genomic sequences by using the KMC tool and
+# its modified dump tool.
+# Refer to generator.sh script for a better comprehension of this
+# script.
 
 PATH=$PATH:bin
 
